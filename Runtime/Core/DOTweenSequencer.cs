@@ -62,6 +62,7 @@ namespace Rehawk.DOTweenSequencing
         
         private Sequence sequence;
         private float internalDurationMultiplier;
+        private bool isAwake;
 
         /// <summary>
         /// True while the underlying DOTween <see cref="Sequence"/> is actively playing
@@ -89,31 +90,44 @@ namespace Rehawk.DOTweenSequencing
         /// <summary>
         /// Raised when the sequence starts playing (in sync with <see cref="onStarted"/>).
         /// </summary>
-        public event Action Started;
+        public event Action<DOTweenSequencer> Started;
         
         /// <summary>
         /// Raised when the sequence is paused (in sync with <see cref="onPaused"/>).
         /// </summary>
-        public event Action Paused;
+        public event Action<DOTweenSequencer> Paused;
         
         /// <summary>
         /// Raised when the sequence completes (in sync with <see cref="onCompleted"/>).
         /// </summary>
-        public event Action Completed;
+        public event Action<DOTweenSequencer> Completed;
         
         /// <summary>
         /// Raised each time the sequence completes a loop iteration (in sync with <see cref="onStepCompleted"/>).
         /// </summary>
-        public event Action StepCompleted;
+        public event Action<DOTweenSequencer> StepCompleted;
         
         /// <summary>
         /// Raised when the sequence is rewound back to the start (in sync with <see cref="onRewound"/>).
         /// </summary>
-        public event Action Rewound;
+        public event Action<DOTweenSequencer> Rewound;
+
+        /// <summary>
+        /// Event that is triggered when a named event associated with the sequencer is invoked.
+        /// Provides the name of the event as a string parameter to listeners.
+        /// </summary>
+        public event Action<string> NamedEventInvoked;
+
+        /// <summary>
+        /// Event invoked whenever a <see cref="ScriptableEvent"/> is triggered by this DOTween sequencer.
+        /// Provides the associated <see cref="ScriptableEvent"/> instance to subscribers.
+        /// </summary>
+        public event Action<ScriptableEvent> ScriptableEventInvoked;
         
         private void Awake()
         {
             internalDurationMultiplier = durationMultiplier;
+            isAwake = true;
         }
 
         private void OnEnable()
@@ -135,7 +149,25 @@ namespace Rehawk.DOTweenSequencing
         }
 
         private void OnDestroy() => Kill();
-        
+
+        /// <summary>
+        /// Invokes a named event associated with this DOTween sequencer.
+        /// Triggers any listeners subscribed to the <see cref="NamedEventInvoked"/> event with the specified event name.
+        /// </summary>
+        public void InvokeNamedEvent(string eventName)
+        {
+            NamedEventInvoked?.Invoke(eventName);
+        }
+
+        /// <summary>
+        /// Invokes the specified <see cref="ScriptableEvent"/> associated with this DOTween sequencer.
+        /// Triggers any listeners subscribed to the <see cref="ScriptableEventInvoked"/> event with the provided ScriptableEvent instance.
+        /// </summary>
+        public void InvokeScriptableEvent(ScriptableEvent scriptableEvent)
+        {
+            ScriptableEventInvoked?.Invoke(scriptableEvent);
+        }
+
         /// <summary>
         /// Sets a runtime duration multiplier for the built sequence.
         /// <para>2 = slower (double duration), 0.5 = faster (half duration), &lt;= 0 = treated as instant by Play/PlayBackwards.</para>
@@ -150,11 +182,14 @@ namespace Rehawk.DOTweenSequencing
         /// (Re)builds the DOTween <see cref="Sequence"/> from the current step list and settings.
         /// <para>
         /// Kills any existing sequence, creates a new one, wires callbacks/events, applies loops and steps,
-        /// then applies the current duration multiplier and pauses the result.
+        /// then applies the current duration multiplier, and pauses the result.
         /// </para>
         /// </summary>
         public void Build()
         {
+            if (!isAwake)
+                internalDurationMultiplier = durationMultiplier;
+
             Kill();
 
             sequence = DOTween.Sequence()
@@ -164,27 +199,27 @@ namespace Rehawk.DOTweenSequencing
                                .OnPlay(() =>
                                {
                                    onStarted.Invoke();
-                                   Started?.Invoke();
+                                   Started?.Invoke(this);
                                })
                                .OnPause(() =>
                                {
                                    onPaused.Invoke();
-                                   Paused?.Invoke();
+                                   Paused?.Invoke(this);
                                })
                                .OnComplete(() =>
                                {
                                    onCompleted.Invoke();
-                                   Completed?.Invoke();
+                                   Completed?.Invoke(this);
                                })
                                .OnStepComplete(() =>
                                {
                                    onStepCompleted.Invoke();
-                                   StepCompleted?.Invoke();
+                                   StepCompleted?.Invoke(this);
                                })
                                .OnRewind(() =>
                                {
                                    onRewound.Invoke();
-                                   Rewound?.Invoke();
+                                   Rewound?.Invoke(this);
                                })
                                .OnKill(() => sequence = null);
 
@@ -194,7 +229,7 @@ namespace Rehawk.DOTweenSequencing
             for (int i = 0; i < steps.Count; i++)
             {
                 ITweenStep step = steps[i];
-                step?.AddTo(sequence);
+                step?.AddTo(this, sequence);
             }
 
             ApplyDurationMultiplier();
@@ -265,7 +300,8 @@ namespace Rehawk.DOTweenSequencing
 
             if (multiplier <= 0f)
             {
-                sequence.Goto(0f, andPlay: false);
+                float end = sequence.Duration(includeLoops: false);
+                sequence.Goto(end, andPlay: false);
                 sequence.Rewind();
                 return;
             }

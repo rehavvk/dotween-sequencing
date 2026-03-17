@@ -12,7 +12,7 @@ namespace Rehawk.DOTweenSequencing
         [TweenValueDrawer("Time")]
         [SerializeField] private TweenValue<float> values = new(0.5f);
 
-        protected override Tween CreateTween()
+        protected override Tween CreateTween(DOTweenSequencer sequencer)
         {
             if (!TryGetTarget(out TrailRenderer trailRenderer))
                 return null;

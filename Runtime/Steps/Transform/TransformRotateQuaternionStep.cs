@@ -11,7 +11,7 @@ namespace Rehawk.DOTweenSequencing
         [SerializeField] private TweenValue<Quaternion> values;
         [SerializeField] private float duration = 0.5f;
 
-        protected override Tween CreateTween()
+        protected override Tween CreateTween(DOTweenSequencer sequencer)
         {
             if (!TryGetTarget(out Transform transform))
                 return null;

@@ -5,19 +5,19 @@ using UnityEngine;
 namespace Rehawk.DOTweenSequencing
 {
     [Serializable]
-    [TweenStep("Misc/SetActive")]
+    [TweenStep("Misc/Set Active")]
     public class SetActiveStep : TweenStepBase<GameObject>
     {
-        [SerializeField] private bool active = true;
+        [SerializeField] private bool isActive = true;
 
-        protected override Tween CreateTween()
+        protected override Tween CreateTween(DOTweenSequencer sequencer)
         {
             if (!TryGetTarget(out GameObject obj)) 
                 return null;
 
             return TweenStepUtils.CreateReversibleInstant(
-                onForward: () => obj.SetActive(active),
-                onBackwards: () => obj.SetActive(!active)
+                onForward: () => obj.SetActive(isActive),
+                onBackwards: () => obj.SetActive(!isActive)
             );
         }
     }

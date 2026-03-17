@@ -8,6 +8,6 @@ namespace Rehawk.DOTweenSequencing
     /// </summary>
     public interface ITweenStep
     {
-        void AddTo(Sequence sequence);
+        void AddTo(DOTweenSequencer sequencer, Sequence sequence);
     }
 }

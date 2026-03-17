@@ -6,13 +6,13 @@ using UnityEngine.Events;
 namespace Rehawk.DOTweenSequencing
 {
     [Serializable]
-    [TweenStep("Misc/UnityEvent")]
+    [TweenStep("Misc/Unity Event")]
     public class UnityEventStep : TweenStepBase
     {
         [SerializeField] private UnityEvent onPlayForwards;
         [SerializeField] private UnityEvent onPlayBackwards;
 
-        protected override Tween CreateTween()
+        protected override Tween CreateTween(DOTweenSequencer sequencer)
         {
             return TweenStepUtils.CreateReversibleInstant(
                 onForward: () => onPlayForwards.Invoke(),

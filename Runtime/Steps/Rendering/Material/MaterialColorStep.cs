@@ -15,7 +15,7 @@ namespace Rehawk.DOTweenSequencing
         [TweenValueDrawer("Color")]
         [SerializeField] private TweenValue<Color> values = new(Color.white);
 
-        protected override Tween CreateTween()
+        protected override Tween CreateTween(DOTweenSequencer sequencer)
         {
             if (!TryGetTarget(out Renderer renderer)) 
                 return null;

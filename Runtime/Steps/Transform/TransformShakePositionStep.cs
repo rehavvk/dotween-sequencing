@@ -15,7 +15,7 @@ namespace Rehawk.DOTweenSequencing
         [SerializeField] private bool snapping = false;
         [SerializeField] private bool fadeOut = true;
 
-        protected override Tween CreateTween()
+        protected override Tween CreateTween(DOTweenSequencer sequencer)
         {
             if (!TryGetTarget(out Transform transform))
                 return null;

@@ -13,7 +13,7 @@ namespace Rehawk.DOTweenSequencing
         [TweenValueDrawer("Glossiness")]
         [SerializeField] private TweenValue<float> values = new(0f);
 
-        protected override Tween CreateTween()
+        protected override Tween CreateTween(DOTweenSequencer sequencer)
         {
             if (!TryGetTarget(out Renderer renderer)) 
                 return null;

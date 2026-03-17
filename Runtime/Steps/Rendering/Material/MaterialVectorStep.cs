@@ -13,7 +13,7 @@ namespace Rehawk.DOTweenSequencing
         [TweenValueDrawer("Vector")]
         [SerializeField] private TweenValue<Vector4> values = new(new Vector4(1, 1, 0, 0));
 
-        protected override Tween CreateTween()
+        protected override Tween CreateTween(DOTweenSequencer sequencer)
         {
             if (!TryGetTarget(out Renderer renderer)) 
                 return null;

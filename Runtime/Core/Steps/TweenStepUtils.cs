@@ -19,15 +19,6 @@ namespace Rehawk.DOTweenSequencing
             Tween tween = DOTween.To(() => 0f, _ => { }, 1f, markerDuration)
                                  .SetEase(Ease.Linear);
 
-            tween.OnPlay(() =>
-            {
-                if (isForwardApplied) 
-                    return;
-                
-                isForwardApplied = true;
-                onForward?.Invoke();
-            });
-
             tween.OnRewind(() =>
             {
                 if (!isForwardApplied)

@@ -12,7 +12,7 @@ namespace Rehawk.DOTweenSequencing
         [SerializeField] private Vector3Axes axes = Vector3Axes.X | Vector3Axes.Y | Vector3Axes.Z;
         [SerializeField] private TweenValue<Vector3> values;
 
-        protected override Tween CreateTween()
+        protected override Tween CreateTween(DOTweenSequencer sequencer)
         {
             if (!TryGetTarget(out Transform transform))
                 return null;

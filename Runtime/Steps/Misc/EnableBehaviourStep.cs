@@ -6,18 +6,18 @@ namespace Rehawk.DOTweenSequencing
 {
     [Serializable]
     [TweenStep("Misc/Enable Behaviour")]
-    public class EnableComponentStep : TweenStepBase<Behaviour>
+    public class EnableBehaviourStep : TweenStepBase<Behaviour>
     {
-        [SerializeField] private bool enabled = true;
+        [SerializeField] private bool isEnabled = true;
 
-        protected override Tween CreateTween()
+        protected override Tween CreateTween(DOTweenSequencer sequencer)
         {
             if (!TryGetTarget(out Behaviour behaviour)) 
                 return null;
             
             return TweenStepUtils.CreateReversibleInstant(
-                onForward: () => behaviour.enabled = enabled,
-                onBackwards: () => behaviour.enabled = !enabled
+                onForward: () => behaviour.enabled = isEnabled,
+                onBackwards: () => behaviour.enabled = !isEnabled
             );
         }
     }

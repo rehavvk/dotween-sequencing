@@ -10,6 +10,6 @@ namespace Rehawk.DOTweenSequencing
     {
         [SerializeField] private float duration = 0.25f;
         
-        protected override Tween CreateTween() => DOVirtual.DelayedCall(duration, () => { });
+        protected override Tween CreateTween(DOTweenSequencer sequencer) => DOVirtual.DelayedCall(duration, () => { });
     }
 }

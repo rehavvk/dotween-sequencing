@@ -5,13 +5,13 @@ using UnityEngine;
 namespace Rehawk.DOTweenSequencing
 {
     [Serializable]
-    [TweenStep("Misc/SendMessage")]
+    [TweenStep("Misc/Send Message")]
     public class SendMessageStep : TweenStepBase<GameObject>
     {
         [SerializeField] private string forwardMessage = "OnPlayForward";
         [SerializeField] private string backwardsMessage = "OnPlayBackwards";
 
-        protected override Tween CreateTween()
+        protected override Tween CreateTween(DOTweenSequencer sequencer)
         {
             if (!TryGetTarget(out GameObject receiver))
                 return null;

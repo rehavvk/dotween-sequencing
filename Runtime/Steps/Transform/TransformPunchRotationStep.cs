@@ -13,7 +13,7 @@ namespace Rehawk.DOTweenSequencing
         [SerializeField] private int vibrato = 10;
         [SerializeField] private float elasticity = 1f;
 
-        protected override Tween CreateTween()
+        protected override Tween CreateTween(DOTweenSequencer sequencer)
         {
             if (!TryGetTarget(out Transform transform))
                 return null;

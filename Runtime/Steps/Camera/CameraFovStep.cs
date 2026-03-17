@@ -12,7 +12,7 @@ namespace Rehawk.DOTweenSequencing
         [TweenValueDrawer("Field Of View")]
         [SerializeField] private TweenValue<float> values = new(60f);
 
-        protected override Tween CreateTween()
+        protected override Tween CreateTween(DOTweenSequencer sequencer)
         {
             if (!TryGetTarget(out Camera camera)) 
                 return null;

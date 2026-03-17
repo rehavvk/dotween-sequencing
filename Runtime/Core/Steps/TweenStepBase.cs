@@ -17,12 +17,12 @@ namespace Rehawk.DOTweenSequencing
         [Min(0)]
         [SerializeField] private float delay = 0f;
 
-        public void AddTo(Sequence sequence)
+        public void AddTo(DOTweenSequencer sequencer, Sequence sequence)
         {
             if (!enabled) 
                 return;
 
-            Tween tween = CreateTween();
+            Tween tween = CreateTween(sequencer);
             if (tween == null)
                 return;
 
@@ -44,7 +44,7 @@ namespace Rehawk.DOTweenSequencing
             }
         }
 
-        protected abstract Tween CreateTween();
+        protected abstract Tween CreateTween(DOTweenSequencer sequencer);
         protected virtual void ConfigureTween(Tween tween) {}
     }
 

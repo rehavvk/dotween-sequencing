@@ -15,7 +15,7 @@ namespace Rehawk.DOTweenSequencing
         [SerializeField] private int resolution = 10;
         [SerializeField] private Color gizmoColor = Color.green;
 
-        protected override Tween CreateTween()
+        protected override Tween CreateTween(DOTweenSequencer sequencer)
         {
             if (!TryGetTarget(out Transform transform))
                 return null;

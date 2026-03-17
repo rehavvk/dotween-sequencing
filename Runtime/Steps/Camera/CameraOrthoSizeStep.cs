@@ -12,7 +12,7 @@ namespace Rehawk.DOTweenSequencing
         [TweenValueDrawer("Orthographic Size")]
         [SerializeField] private TweenValue<float> values = new(5f);
 
-        protected override Tween CreateTween()
+        protected override Tween CreateTween(DOTweenSequencer sequencer)
         {
             if (!TryGetTarget(out Camera camera)) 
                 return null;
